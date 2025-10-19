@@ -1,4 +1,3 @@
-// Array of quote objects with text and category
 let quotes = [
   { text: "The only way to do great work is to love what you do.", category: "Inspiration" },
   { text: "Innovation distinguishes between a leader and a follower.", category: "Leadership" },
@@ -21,16 +20,12 @@ function loadQuotes() {
 function populateCategories() {
   const categoryFilter = document.getElementById('categoryFilter');
   
-  const categories = ['all'];
-  quotes.forEach(quote => {
-    if (!categories.includes(quote.category)) {
-      categories.push(quote.category);
-    }
-  });
+  const categories = quotes.map(quote => quote.category);
+  const uniqueCategories = [...new Set(categories)];
   
   categoryFilter.innerHTML = '<option value="all">All Categories</option>';
   
-  categories.slice(1).forEach(category => {
+  uniqueCategories.forEach(category => {
     const option = document.createElement('option');
     option.value = category;
     option.textContent = category;
@@ -143,7 +138,6 @@ function importFromJsonFile(event) {
 
 document.getElementById('newQuote').addEventListener('click', showRandomQuote);
 
-// Initialize on page load
 window.onload = function() {
   loadQuotes();
   populateCategories();
