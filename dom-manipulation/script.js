@@ -26,6 +26,18 @@ async function fetchQuotesFromServer() {
   }));
 }
 
+async function postQuoteToServer(quote) {
+  const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(quote)
+  });
+  const data = await response.json();
+  return data;
+}
+
 async function syncQuotes() {
   const serverQuotes = await fetchQuotesFromServer();
   const localQuotesText = quotes.map(q => q.text);
