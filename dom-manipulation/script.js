@@ -53,7 +53,7 @@ async function syncQuotes() {
   if (conflictDetected) {
     saveQuotes();
     populateCategories();
-    notifyUser('New quotes synced from server!');
+    notifyUser('Quotes synced with server!');
   }
 }
 
