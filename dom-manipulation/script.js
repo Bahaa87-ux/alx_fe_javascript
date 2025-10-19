@@ -17,6 +17,45 @@ function loadQuotes() {
   }
 }
 
+async function fetchQuotesFromServer() {
+  const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+  const data = await response.json();
+  return data.map(item => ({
+    text: item.title,
+    category: "Server"
+  }));
+}
+
+async function syncQuotes() {
+  const serverQuotes = await fetchQuotesFromServer();
+  const localQuotesText = quotes.map(q => q.text);
+  let conflictDetected = false;
+  
+  serverQuotes.forEach(serverQuote => {
+    if (!localQuotesText.includes(serverQuote.text)) {
+      quotes.push(serverQuote);
+      conflictDetected = true;
+    }
+  });
+  
+  if (conflictDetected) {
+    saveQuotes();
+    populateCategories();
+    notifyUser('New quotes synced from server!');
+  }
+}
+
+function notifyUser(message) {
+  const notification = document.getElementById('notification');
+  if (notification) {
+    notification.textContent = message;
+    notification.style.display = 'block';
+    setTimeout(() => {
+      notification.style.display = 'none';
+    }, 3000);
+  }
+}
+
 function populateCategories() {
   const categoryFilter = document.getElementById('categoryFilter');
   
@@ -149,4 +188,6 @@ window.onload = function() {
   } else {
     showRandomQuote();
   }
+  
+  setInterval(syncQuotes, 60000);
 };
